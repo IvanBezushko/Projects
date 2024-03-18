@@ -1,0 +1,35 @@
+<!DOCTYPE html
+<html lang="pl">
+  <head>
+ <meta charset="UTF-8">
+ <meta name="port" content="=device-width initial-scale=.0">
+    <title>Edytuj zamówien</title>
+ <link rel="stylesheet" href="edytuj.css">
+  </head>
+  <body>
+    <div class="container">
+      <h2>Edytuj zamówienie</h2>
+      <form action="edytuj-zamowienie.php" method="post">
+        <label for="id_klienta">ID klienta:</label>
+        <input type="number" name="id_klienta" id="id_klienta" required><br>
+        <label for="imie">Imię:</label>
+        <input type="text" name="imie" id="imie" required><br>
+        <label for="nazwisko">Nazwisko:</label>
+        <input type="text" name="nazwisko" id="nazwisko" required><br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required><br>
+        <label for="destynacja">Destynacja:</label>
+        <input type="text" name="destynacja" id="destynacja" required><br>
+        <label for="klasa">Klasa:</label>
+        <input type="text" name="klasa" id="klasa" required><br>
+        <label for="data_wyjazdu">Data wyjazdu:</label>
+        <input type="date" name="data_wyjazdu" id="data_wyjazdu" required><br>
+        <label for="ilosc_osob">Ilość osób:</label>
+        <input type="number" name="ilosc_osob" id="ilosc_osob" required><br>
+        <label for="numer_telefonu">Numer telefonu:</label>
+        <input type="tel" name="numer_telefonu" id="numer_telefonu" required><br>
+        <button type="submit">Zapisz zmiany</button>
+      </form>
+    </div>
+  </body>
+</html>

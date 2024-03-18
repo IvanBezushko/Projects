@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/jpeg" href="obrazki/koszyk.png">
+    <title>Koszyk</title>
+    <link rel="stylesheet" href="koszyk.css">
+</head>
+<body>
+    <h1>Nasz mały sklep własnej produkcji</h1>
+    <div id="zamowienia">
+    <div class="koszyk">
+        <!-- Przykładowy produkt -->
+        <div class="produkt">
+            <img src="obrazki/hoodie.png" alt="Nazwa Produktu" class="produkt-obrazek">
+            <div class="produkt-info">
+                <h2>Hoodie</h2>
+                <p>Hoodie w japońskim stylu to połączenie wygody </p>
+                <p>Cena: <span class="cena">180</span> PLN</p>
+                <div class="produkt-ilosc">
+                    <button onclick="zmienIlosc(this, -1)">-</button>
+                    <input type="text" value="0" readonly>
+                    <button onclick="zmienIlosc(this, 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="produkt">
+            <img src="obrazki/jukata.png" alt="Nazwa Produktu" class="produkt-obrazek">
+            <div class="produkt-info">
+                <h2>Jukata</h2>
+                <p>Jukata to tradycyjna japońska bawełniana sukienka</p>
+                <p>Cena: <span class="cena">380</span> PLN</p>
+                <div class="produkt-ilosc">
+                    <button onclick="zmienIlosc(this, -1)">-</button>
+                    <input type="text" value="0" readonly>
+                    <button onclick="zmienIlosc(this, 1)">+</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="produkt">
+            <img src="obrazki/panama.png" alt="Nazwa Produktu" class="produkt-obrazek">
+            <div class="produkt-info">
+                <h2>Panama</h2>
+                <p>Panama w japońskim stylu to elegancki kapelusz o lekkiej konstrukcji.</p>
+                <p>Cena: <span class="cena">85</span> PLN</p>
+                <div class="produkt-ilosc">
+                    <button onclick="zmienIlosc(this, -1)">-</button>
+                    <input type="text" value="0" readonly>
+                    <button onclick="zmienIlosc(this, 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="produkt">
+            <img src="obrazki/dlugopis.png" alt="Nazwa Produktu" class="produkt-obrazek">
+            <div class="produkt-info">
+                <h2>Długopis</h2>
+                <p>Długopis w japońskim stylu to elegancki i estetyczny przybór do pisania.</p>
+                <p>Cena: <span class="cena">18</span> PLN</p>
+                <div class="produkt-ilosc">
+                    <button onclick="zmienIlosc(this, -1)">-</button>
+                    <input type="text" value="0" readonly>
+                    <button onclick="zmienIlosc(this, 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div class="produkt">
+            <img src="obrazki/kubek.png" alt="Nazwa Produktu" class="produkt-obrazek">
+            <div class="produkt-info">
+                <h2>Kubek</h2>
+                <p>Kubek w japońskim stylu to elegancki "和風" (Wafū) kubek.</p>
+                <p>Cena: <span class="cena">85</span> PLN</p>
+                <div class="produkt-ilosc">
+                    <button onclick="zmienIlosc(this, -1)">-</button>
+                    <input type="text" value="0" readonly>
+                    <button onclick="zmienIlosc(this, 1)">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    </div>
+
+    <div class="linia"></div>
+
+    <div id="container">
+        <!-- Przyciski -->
+        <button onclick="location.href='index.html'" class="button1">Powrót do strony głównej</button>
+        <button onclick="pokazFormularzZamowienia()" class="button1">Zamawiam</button>
+    </div>
+
+    <div id="modalBackground" class="modal">
+        <div id="formularzZamowienia" class="modal-content">
+            <span class="close">&times;</span>
+        <form action="koszyk.php" method="post" >
+        <input type="text" name="imie" placeholder="Imię" required>
+        <input type="text" name="nazwisko" placeholder="Nazwisko" required>
+        <input type="email" name="email" placeholder="Email" required>
+        
+
+        <!-- Ukryte pola dla ilości produktów -->
+        <input type="hidden" name="hoodie" id="iloscHoodie" value="0">
+        <input type="hidden" name="jukata" id="iloscJukata" value="0">
+        <input type="hidden" name="panama" id="iloscPanama" value="0">
+        <input type="hidden" name="dlugopis" id="iloscDlugopis" value="0">
+        <input type="hidden" name="kubek" id="iloscKubek" value="0">
+
+        <button type="submit">Zapisz</button>
+    </form>
+</div>
+
+    </div>
+
+    <script>
+        function zmienIlosc(element, zmiana) {
+    var input = element.parentElement.querySelector('input[type=text]');
+    var nowaIlosc = parseInt(input.value) + zmiana;
+
+    // Zapobiegaj zmniejszeniu ilości poniżej 0
+    if (nowaIlosc < 0) {
+        nowaIlosc = 0;
+    }
+    input.value = nowaIlosc;
+
+    // Aktualizacja wartości w ukrytym polu formularza
+    var produkt = element.closest('.produkt').querySelector('h2').textContent;
+    var formattedProdukt = produkt.replace(/\s+/g, ''); // Usuń spacje z nazwy produktu
+    document.getElementById('ilosc' + formattedProdukt).value = nowaIlosc;
+}
+
+       // Kiedy użytkownik kliknie przycisk "Zamawiam", pokaż modal
+function pokazFormularzZamowienia() {
+    document.getElementById('modalBackground').style.display = 'block';
+}
+
+// Kiedy użytkownik kliknie na (x), zamknij modal
+var close = document.getElementsByClassName("close")[0];
+close.onclick = function() {
+    document.getElementById('modalBackground').style.display = 'none';
+}
+
+// Kiedy użytkownik kliknie poza modal, zamknij go
+window.onclick = function(event) {
+    var modal = document.getElementById('modalBackground');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+
+
+
+    </script>
+
+    <div class="rectangle">2010 &copy; Traveling to Japan</div>
+    <div class="pas"></div>
+</body>
+</html>

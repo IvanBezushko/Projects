@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="rejestracja.css">
+    <title>Rejestracja</title>
+</head>
+<body>
+    <h2>Formularz Rejestracji</h2>
+    <form action="rejestracja.php" method="post">
+        <div>
+            <label for="imie">Imię:</label>
+            <input type="text" id="imie" name="imie" required>
+        </div>
+        <div>
+            <label for="nazwisko">Nazwisko:</label>
+            <input type="text" id="nazwisko" name="nazwisko" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="haslo">Hasło:</label>
+            <input type="password" id="haslo" name="haslo" required>
+        </div>
+        <div>
+            <button type="submit">Zarejestruj się</button>
+        </div>
+    </form>
+</body>
+</html>

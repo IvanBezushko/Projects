@@ -1,0 +1,176 @@
+
+@media (max-width: 480px) {
+  body {
+      padding: 10px;
+  }
+
+  #form-opinia {
+      max-width: 100%;
+      padding: 10px;
+  }
+
+  .pasek, .pasek1 {
+      display: none; 
+  }
+
+  #form-opinia fieldset {
+      padding: 0;
+  }
+
+  #form-opinia legend {
+      font-size: 1.2em;
+  }
+
+  #form-opinia input[type="text"],
+  #form-opinia input[type="email"],
+  #form-opinia textarea {
+      padding: 6px;
+  }
+
+  #form-opinia .submit-btn {
+      padding: 8px 16px;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+
+    body {
+        padding: 10px;
+    }
+  
+    #form-opinia {
+        max-width: 100%;
+        padding: 10px;
+    }
+  
+    .pasek, .pasek1 {
+        display: none; 
+    }
+  
+    #form-opinia fieldset {
+        padding: 0;
+    }
+  
+    #form-opinia legend {
+        font-size: 1.2em;
+    }
+  
+    #form-opinia input[type="text"],
+    #form-opinia input[type="email"],
+    #form-opinia textarea {
+        padding: 6px;
+    }
+  
+    #form-opinia .submit-btn {
+        padding: 8px 16px;
+    }
+
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #d2c9c9;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  /* Styl dla komunikatów */
+.message {
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    color: #fff;
+    max-width: 600px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Styl dla komunikatu sukcesu */
+.success {
+    background-color: #4CAF50; /* Zielony */
+}
+
+/* Styl dla komunikatu błędu */
+.error {
+    background-color: #f44336; /* Czerwony */
+}
+
+/* Dodatkowe style dla tekstu wewnątrz komunikatów */
+.message p {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2em;
+}
+
+  .pasek{
+    width: 140px;
+    height: 289px;
+    background-color: #2a830d;
+  }
+  
+  .pasek1{
+    width: 100%;
+    height: 140px;
+    background-color: #df9535;
+  }
+  
+  #container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #form-opinia {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#form-opinia fieldset {
+    border: none;
+    
+}
+
+#form-opinia legend {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#form-opinia label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#form-opinia input[type="text"],
+#form-opinia input[type="email"],
+#form-opinia textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#form-opinia .submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#form-opinia .submit-btn:hover {
+    background-color: #45a049;
+}

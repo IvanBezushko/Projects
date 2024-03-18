@@ -1,0 +1,62 @@
+[
+    {
+        "city": "Tokio",
+        "flights": {
+            "Economic": 2215,
+            "Premium": 3576
+        },
+        "hotels": {
+            "Economic": 5978,
+            "Premium": 8697
+        },
+        "total": {
+            "Economic": 8193,
+            "Premium": 12273
+        }
+    },
+    {
+        "city": "Kioto",
+        "flights": {
+            "Economic": 2350,
+            "Premium": 3596
+        },
+        "hotels": {
+            "Economic": 5856,
+            "Premium": 9446
+        },
+        "total": {
+            "Economic": 8206,
+            "Premium": 13042
+        }
+    },
+    {
+        "city": "Osaka",
+        "flights": {
+            "Economic": 2340,
+            "Premium": 3700
+        },
+        "hotels": {
+            "Economic": 6546,
+            "Premium": 8900
+        },
+        "total": {
+            "Economic": 8886,
+            "Premium": 12600
+        }
+    },
+    {
+        "city": "Okinawa",
+        "flights": {
+            "Economic": 2389,
+            "Premium": 4000
+        },
+        "hotels": {
+            "Economic": 6500,
+            "Premium": 8989
+        },
+        "total": {
+            "Economic": 8889,
+            "Premium": 12989
+        }
+    }
+]

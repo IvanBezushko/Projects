@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="kons.css">
+
+    <title>Formularz zamówienia</title>
+    <link rel="icon" type="image/jpeg" href="obrazki/formularz.jpg">
+</head>
+
+<body>
+    <div class="pasek1"></div>
+    <div id="container">
+        <div class="pasek"></div>
+
+        <form id="form-konsultacja" action="konsultacja.php" method="post">
+            <fieldset>
+                <legend>Konsultacja</legend>
+                <label for="nazwisko">Nazwisko:</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+
+                <label for="telefon">Telefon:</label>
+                <input type="tel" id="telefon" name="telefon" required>
+
+                <label for="wiadomosc">Wiadomość:</label>
+                <textarea id="wiadomosc" name="wiadomosc" required></textarea>
+
+                <button type="submit" class="submit-btn">Umów konsultację</button>
+            </fieldset>
+        </form>
+
+        <div class="pasek"></div>
+    </div>
+    <div class="pasek1"></div>
+
+</body>
+
+</html>

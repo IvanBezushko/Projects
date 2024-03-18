@@ -1,0 +1,230 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #444;
+}
+
+#zamowienia {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 50px;
+}
+
+.koszyk {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.produkt {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    flex: 0 1 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.produkt-obrazek {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.produkt-info {
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+}
+
+.produkt-info h2 {
+    color: #5c6ac4;
+}
+
+.produkt-info p {
+    line-height: 1.5;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.cena {
+    color: #e47272;
+    font-weight: bold;
+}
+
+.produkt-ilosc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.produkt-ilosc button {
+    background-color: #e7e7e7;
+    color: #333;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.produkt-ilosc button:hover {
+    background-color: #d4d4d4;
+}
+
+.produkt-ilosc input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    
+}
+
+button {
+    background-color: #5c6ac4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #4957a5;
+}
+
+#container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.linia{
+    width: 100%;
+    height: 1px;
+    background-color: #000000;
+}
+
+.pas{
+    width: 100%;
+    height: 35px;
+    background-color: darkgoldenrod;
+}
+
+.rectangle {
+    width: 100%;
+    display: flex;
+    font-size: 18px;
+    color: #000;
+    justify-content: center;
+    margin: 25px;
+  }
+
+  button1 {
+    background-color: #5c6ac4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 200px;
+    height: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+button1:hover {
+    background-color: #4957a5;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%; /* Możesz dostosować do swoich potrzeb */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+
+/* Styl dla przycisku zamknięcia */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.modal-content input[type=text],
+.modal-content input[type=email],
+.modal-content button {
+    width: 90%; /* Szerokość inputów i przycisku */
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: block; /* Każdy element w nowej linii */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
+button[type=submit] {
+    width: 90%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button[type=submit]:hover {
+    background-color: #45a049;
+}

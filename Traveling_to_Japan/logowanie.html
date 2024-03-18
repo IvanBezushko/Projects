@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="logowanie.css">
+    <title>Logowanie</title>
+</head>
+<body>
+    <h2>Formularz Logowania</h2>
+    <form action="logowanie.php" method="post">
+        <div>
+            <label for="imie">Imię:</label>
+            <input type="text" id="imie" name="imie" required>
+        </div>
+        <div>
+            <label for="nazwisko">Nazwisko:</label>
+            <input type="text" id="nazwisko" name="nazwisko" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="haslo">Hasło:</label>
+            <input type="password" id="haslo" name="haslo" required>
+        </div>
+        <div>
+            <button type="submit">Loguj się</button>
+            <button type="button" onclick="location.href='rejestracja.html'">Rejestruj się</button>
+        </div>
+    </form>
+</body>
+</html>

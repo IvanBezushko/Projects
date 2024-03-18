@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html lang="pl">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="jquery-3.7.1.min.js"></script>
+  <script src="script.js"></script>
+  <link rel="icon" type="image/jpeg" href="obrazki/logo.png">
+  <title>Traveling to Japan</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Lobster&display=swap" rel="stylesheet">
+
+</head>
+
+<body id="scroll">
+  <header>
+
+    <button onclick="location.href='koszyk.html'" class="koszyk-btn"></button>
+
+    <h1 class="logo">Traveling to Japan</h1>
+    
+      <a href="logowanie.html" id="logowanie-button">Logowanie</a>
+  
+  </header>
+
+  <nav>
+    <a href="#Karta">Karta</a>
+    <a href="#oferujemy">Oferty</a>
+    <a href="#ceny">Ceny</a>
+    <a href="#FAQ">FAQ</a>
+    <a href="#przewodnik">O nas</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
+
+  <div id="zegar-i-data">
+    <div id="data"></div>
+
+    <div id="sunrise-scene">
+      <div id="sun"></div>
+    </div>
+
+    <div id="zegar"></div>
+  </div>
+
+  <div class="linia"></div>
+
+  <section id="Karta">
+    <br>
+    <div id="sakura"></div>
+    <h2 class="about-us-header"><b>Mapa Japonii</b></h2>
+    <div class="mapa">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13215348.412181797!2d131.0255893!3d36.0348591!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34674e0fd77f192f%3A0xf54275d47c665244!2sJaponia!5e0!3m2!1spl!2spl!4v1698524454666!5m2!1spl!2spl"
+        style="border:0; width: 100%; height: 500px;" allowfullscreen="" aria-hidden="false" tabindex="0">
+      </iframe>
+    </div>
+
+    <div id="loader" class="loader">
+
+      <div class="🤚">
+        <div class="👉"></div>
+        <div class="👉"></div>
+        <div class="👉"></div>
+        <div class="👉"></div>
+        <div class="🌴"></div>
+        <div class="👍"></div>
+      </div>
+
+    </div>
+    <br>
+    <h2 class="about-us-header"><b>Pogoda Japonii</b></h2>
+
+    <div id="weather-widget">
+      <select id="city-selector">
+        <option value="Tokyo">Tokio</option>
+        <option value="Kyoto">Kioto</option>
+        <option value="Osaka">Osaka</option>
+        <option value="Okinawa">Okinawa</option>
+      </select>
+      <div id="weather-info">
+        <p>Temperatura: <span id="temp"></span>°C</p>
+        <p>Warunki: <span id="conditions"></span></p>
+        <p>Wilgotność: <span id="humidity"></span>%</p>
+        <p>Prędkość wiatru: <span id="wind-speed"></span> km/h</p>
+        <p>Kierunek wiatru: <span id="wind-direction"></span></p>
+        <p>Ciśnienie: <span id="pressure"></span> hPa</p>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="linia"></div>
+
+  <section id="oferujemy">
+
+    <h2 class="about-us-header"><b>Oferujemy</b></h2>
+    <br>
+
+    <div class="eks">
+
+      <div class="karteczka">
+        <img src="obrazki/tokio.jpg " alt="Tokio">
+
+        <div class="kart-cont">
+          <p class="cont"><b>Tokio</b></p>
+          <br>
+          <p class="tekst"><b>Informacja:</b> Witaj w fascynującym Tokio, jednym z najbardziej ekscytujących i
+            pulsujących miast na świecie. To miejsce, gdzie nowoczesność spotyka się z tradycją w niezwykle zaskakujący
+            sposób. Od błyszczących drapaczy chmur po tętniące życiem ulice dzielnic takich jak Shibuya i Shinjuku –
+            Tokio zaskoczy Cię różnorodnością i niekończącą się energią. To miasto, które nigdy nie śpi i zawsze oferuje
+            coś nowego do odkrycia. Przygotuj się na niezapomnianą podróż pełną przygód!</p>
+          <br>
+          <div style="clear:both;"></div>
+        </div>
+        <a href="tokio.html" class="przycisk1">Więcej</a>
+      </div>
+    </div>
+
+    <div class="eks">
+
+      <div class="karteczka">
+        <img src="obrazki/kyoto.jpg" alt="Kioto">
+
+        <div class="kart-cont">
+
+          <p class="cont"><b>Kioto</b></p>
+          <br>
+          <p class="tekst"><b>Informacja:</b> Witaj w Kioto, gdzie tradycja spotyka się z nowoczesnością. Przenieś się w
+            czasie, odkrywając mistyczną atmosferę świątyń, ogrodów zen i klimatycznych uliczek. Kioto to miejsce, gdzie
+            zetkniesz się z prawdziwą japońską kulturą, smakując tradycyjne potrawy i uczestnicząc w ceremonii herbaty.
+            Przygotuj się na podróż pełną magii i niezwykłych wspomnień! </p>
+          <br>
+          <div style="clear:both;"></div>
+        </div>
+        <a href="kioto.html" class="przycisk1">Więcej</a>
+      </div>
+    </div>
+
+    <div class="eks">
+
+      <div class="karteczka">
+        <img src="obrazki/osaka.jpg" alt="Osaka">
+
+        <div class="kart-cont">
+          <p class="cont"><b>Osaka</b></p>
+          <br>
+          <p class="tekst"><b>Informacja:</b> Witaj w urokliwej Osace, sercu Japonii, gdzie historia spotyka
+            nowoczesność. To miasto pełne kontrastów, gdzie tradycyjne świątynie sąsiadują z imponującymi wieżowcami, a
+            uliczne stoiska kuszą smakoszy. Osaka oferuje niezapomniane doświadczenia i niepowtarzalny klimat, który
+            zachwyci każdego podróżnika.</p>
+          <br>
+          <div style="clear:both;"></div>
+        </div>
+        <a href="osaka.html" class="przycisk1">Więcej</a>
+      </div>
+    </div>
+
+    <div class="eks">
+
+      <div class="karteczka">
+        <img src="obrazki/okinawa.jpg" alt="Okinawa">
+
+        <div class="kart-cont">
+          <p class="cont"><b>Okinawa</b></p>
+          <br>
+          <p class="tekst"><b>Informacja:</b> Witaj na rajskim archipelagu Okinawa, gdzie rajskie plaże spotykają się z
+            kulturowym dziedzictwem. To miejsce, gdzie wypoczynek i przygoda idą w parze. Okinawa to doskonałe miejsce
+            na wakacje, gdzie możesz zanurzyć się w pięknych wodach i odkryć fascynującą kulturę.</p>
+          <br>
+          <div style="clear:both;"></div>
+        </div>
+        <a href="okinawa.html" class="przycisk1">Więcej</a>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="linia"></div>
+
+  <section id="ceny">
+    <h2>Ceny</h2>
+    <div id="table-container"></div>
+
+    <div class="container2">
+      <a href="zamowienie.html" class="button4">Chcę zamówić!</a>
+    </div>
+
+    <div id="currency-calculator">
+      <input type="number" id="amount" placeholder="Kwota">
+      <select id="from-currency">
+        <option value="USD">Dolar (USD)</option>
+        <option value="JPY">Yen (JPY)</option>
+        <option value="EUR">Euro (EUR)</option>
+        <option value="PLN">Złoty (PLN)</option>
+      </select>
+      do
+      <select id="to-currency">
+        <option value="USD">Dolar (USD)</option>
+        <option value="JPY">Yen (JPY)</option>
+        <option value="EUR">Euro (EUR)</option>
+        <option value="PLN">Złoty (PLN)</option>
+      </select>
+      <button onclick="convertCurrency()">Przelicz</button>
+      <div id="result"></div>
+    </div>
+
+  </section>
+
+  <div class="linia"></div>
+
+  <section id="slidering">
+    <h2 class="sr-only">Slider</h2>
+    <div class="slide-container">
+      <div id="slider">
+        <img src="obrazki/slide1.jpg" class="slide aktywny" alt="slide1">
+        <img src="obrazki/slide2.jpg" class="slide" alt="slide2">
+        <img src="obrazki/slide3.jpg" class="slide" alt="slide3">
+        <img src="obrazki/slide4.jpg" class="slide" alt="slide4">
+        <img src="obrazki/slide5.jpg" class="slide" alt="slide5">
+        <img src="obrazki/slide6.jpg" class="slide" alt="slide6">
+        <img src="obrazki/slide7.jpg" class="slide" alt="slide7">
+        <img src="obrazki/slide8.jpg" class="slide" alt="slide8">
+        <img src="obrazki/slide9.jpg" class="slide" alt="slide9">
+        <img src="obrazki/slide10.jpg" class="slide" alt="slide10">
+      </div>
+    </div>
+
+  </section>
+  <div class="linia"></div>
+
+  <section id="FAQ">
+    <h2 class="about-us-header"><b>FAQ</b></h2>
+
+    <div class="accordion">
+
+      <article>
+        <h3 class="sr-only">Opisowy Tytuł</h3>
+        <input id="article1" type="radio" name="articles" checked>
+        <label for="article1" class="pole">
+          1. Jakie dokumenty są wymagane do wjazdu do Japonii?
+        </label>
+        <div class="text">
+          Wymagania wizowe dla Japonii różnią się w zależności od kraju pochodzenia. Jednak większość turystów nie
+          potrzebuje wizy, jeśli planują krótką wizytę do 90 dni. Na przykład, obywatele Unii Europejskiej, Stanów
+          Zjednoczonych i wielu innych krajów są zwolnieni z wizy turystycznej. Upewnij się, że Twoje dokumenty podróżne
+          są ważne przez cały okres pobytu.
+        </div>
+      </article>
+
+      <article>
+        <h3 class="sr-only">Opisowy Tytuł</h3>
+        <input id="article2" type="radio" name="articles">
+        <label for="article2">
+          2. Jakie wydarzenia kulturalne warto zobaczyć podczas pobytu w Japonii?
+        </label>
+        <div class="text">
+          Japonia ma piękne pory roku. Kwiaty wiśni, czyli sakura, kwitną wiosną (marzec-kwiecień), a krajobrazy
+          jesienią (październik-listopad) są niezwykłe dzięki jesiennym liściom. Lato (czerwiec-sierpień) jest idealne
+          na festiwale, podczas gdy zima (grudzień-luty) oferuje sporty zimowe. Wybór zależy od Twoich preferencji.
+        </div>
+      </article>
+
+      <article>
+        <h3 class="sr-only">Opisowy Tytuł</h3>
+        <input id="article3" type="radio" name="articles">
+        <label for="article3">
+          3. Jakie unikalne doświadczenia czekają na turystów w Japonii?
+        </label>
+        <div class="text">
+          Japonia jest pełna fascynujących miejsc. Tokio oferuje nowoczesną kulturę i zakupy, Kioto jest siedzibą wielu
+          świątyń i ogrodów, a Hiroshima ma nie tylko muzeum pokoju, ale także urokliwe wyspy Seto Inland Sea. Nie
+          zapomnij o wizycie w świątyniach, takich jak Fushimi Inari Taisha w Kioto.
+        </div>
+      </article>
+
+      <article>
+        <h3 class="sr-only">Opisowy Tytuł</h3>
+        <input id="article4" type="radio" name="articles">
+        <label for="article4">
+          4. Jakie są podstawowe zasady zachowania w miejscach publicznych w Japonii?
+        </label>
+        <div class="text">
+          Kultura japońska jest bogata w tradycje i etykietę. Należy zdjąć buty przed wejściem do domów i świątyń.
+          Zwyczajem jest również skłon w geście powitania. Unikaj hałaśliwego zachowania w miejscach publicznych i
+          pamiętaj, aby być uprzejmy. Szanuj japońskie zwyczaje i przepisy.
+        </div>
+      </article>
+
+      <article>
+        <h3 class="sr-only">Opisowy Tytuł</h3>
+        <input id="article5" type="radio" name="articles" checked>
+        <label for="article5" class="pole">
+          5. Gdzie można znaleźć przystępne cenowo opcje gastronomiczne w Japonii?
+        </label>
+        <div class="text">
+          Ceny jedzenia w Japonii mogą być nieco wyższe niż w innych krajach. Standardowe danie w restauracji średniej
+          klasy kosztuje od 800 do 2 500 jenów (około 7 do 22 USD), ale istnieją również tanie opcje, takie jak izakaya.
+          Nie trzeba dawać napiwków, ponieważ obsługa jest wliczona w cenę.
+        </div>
+      </article>
+    </div>
+
+
+
+    <div id="chatbot-container">
+      <div id="chatbot-faq">
+        <h3>Najczęściej zadawane pytania</h3>
+        <ul>
+          <li onclick="sendQuestion('Jak uzyskać wizę do Japonii?')">Wiza do Japonii</li>
+          <li onclick="sendQuestion('Jaka jest waluta w Japonii?')">Waluta w Japonii</li>
+          <li onclick="sendQuestion('Jakie jest pogoda w Japonii?')">Pogoda w Japonii</li>
+          <li onclick="sendQuestion('Co warto zjeść będąc w Japonii?')">Jedzenie w Japonii</li>
+          <li onclick="sendQuestion('Jak wygląda transport w Japonii?')">Transport w Japonii</li>
+          <li onclick="sendQuestion('Jakie są popularne atrakcje turystyczne w Japonii?')">Atrakcje turystyczne w
+            Japonii</li>
+          <li onclick="sendQuestion('Chcę dowiedzieć się więcej o kulturze Japonii.')">Kultura Japonii</li>
+          <li onclick="sendQuestion('Gdzie mogę znaleźć zakwaterowanie w Japonii?')">Zakwaterowanie w Japonii</li>
+          <li onclick="sendQuestion('Czy Japonia jest bezpiecznym krajem?')">Bezpieczeństwo w Japonii</li>
+          <li onclick="sendQuestion('Jakie festiwale odbywają się w Japonii?')">Festiwale w Japonii</li>
+          <li onclick="sendQuestion('Gdzie mogę sprawdzić aktualny kurs waluty?')">Kurs waluty w Japonii</li>
+        </ul>
+      </div>
+
+      <div id="chatbot">
+        <div id="chatbot-messages" style="height: 500px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+
+        </div>
+        <input type="text" id="chatbot-input" placeholder="Zadaj pytanie..." style="width: 80%;">
+        <button onclick="sendMessage()">Wyślij</button>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="linia"></div>
+
+  <section id="about">
+    <h2 class="about-us-header"><b>About Us</b></h2>
+    <div class="about-info">
+      <div class="about-img">
+        <img src="obrazki/logo.png" alt="Travel to Japan">
+      </div>
+      <div>
+        <h3 class="about-us-subheader">Nasza Historia</h3>
+        <p>W 2010 roku, nasza przygoda z Japonią rozpoczęła się od pierwszej podróży do tego fascynującego kraju. To był
+          moment, który na zawsze zmienił nasze życie i przyniósł fascynację japońską kulturą, historią i pięknem
+          przyrody. Nasza pasja do Japonii była tak wielka, że postanowiliśmy ją podzielić z innymi.</p>
+
+        <h3 class="about-us-subheader">Nasze Osiągnięcia</h3>
+        <p>Od tego czasu nasza strona stała się jednym z wiodących źródeł informacji o podróżach do Japonii.
+          Osiągnęliśmy wiele wspaniałych rzeczy na naszej drodze:</p>
+        <ul>
+          <li>Wpisaliśmy się na listę najlepszych blogów podróżniczych poświęconych Japonii.</li>
+          <li>Otrzymaliśmy wiele pozytywnych recenzji od podróżników, którzy skorzystali z naszych porad.</li>
+          <li>Nasza społeczność stała się miejscem, gdzie inni miłośnicy Japonii mogą dzielić się swoimi historiami i
+            doświadczeniami.</li>
+          <li>Zorganizowaliśmy liczne konkursy i wydarzenia promujące Japonię jako destynację podróży.</li>
+          <li>Współpracowaliśmy z lokalnymi ekspertami, aby dostarczyć najbardziej wiarygodne informacje.</li>
+        </ul>
+        <h3 class="about-us-subheader">Przyszłość</h3>
+        <p>Naszą misją jest nadal dostarczanie wartościowych informacji i inspiracji wszystkim, którzy marzą o podróży
+          do Japonii. Mamy wiele planów na przyszłość, w tym rozwijanie treści, organizowanie wydarzeń i tworzenie
+          jeszcze lepszych narzędzi dla podróżników.</p>
+        <h3 class="about-us-subheader">Dziękujemy Wam!</h3>
+        <p>Chcielibyśmy podziękować naszej społeczności za wsparcie i za to, że jesteście częścią naszej podróży. Wasza
+          pasja do Japonii jest naszą główną motywacją, i jesteśmy wdzięczni, że możemy być częścią tego niesamowitego
+          świata.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="linia"></div>
+
+  <section id="kontakt">
+    <h3 class="sr-only">Opisowy Tytuł</h3>
+    <div id="container1">
+      <a href="zamowienie.html" class="button1">Chcę zamówić!</a>
+      <a href="opinia.html" class="button2">Dodam opinię</a>
+      <a href="konsultacja.html" class="button3">Konsultację</a>
+    </div>
+  </section>
+
+  <div class="linia"></div>
+
+  <div class="rectangle">2010 &copy; Traveling to Japan</div>
+
+  <div class="squere"></div>
+
+  <div class="squere1"></div>
+
+  <a id="button"></a>
+  
+</body>
+
+</html>

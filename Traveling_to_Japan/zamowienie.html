@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="formularz.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Formularz zamówienia</title>
+    <link rel="icon" type="image/jpeg" href="obrazki/formularz.jpg">
+</head>
+<body>
+    <form action="zamowienie.php" method="post" id="formularz">
+        <div class="data">
+            <div class="field">
+                <label for="imie">Imię:</label>
+                <input type="text" id="imie" name="imie" required>
+            </div>
+            <div class="field">
+                <label for="nazwisko">Nazwisko:</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+            </div>
+            <div class="field">
+                <label for="ilosc_osob">Ilość Osób:</label>
+                <input type="number" id="ilosc_osob" name="ilosc_osob" required>
+            </div>
+            <div class="field">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="field">
+                <label for="numer_telefonu">Numer Telefonu:</label>
+                <input type="tel" id="numer_telefonu" name="numer_telefonu" required>
+            </div>
+            <div class="field">
+                <label for="destynacja">Destynacja:</label>
+                <input type="text" id="destynacja" name="destynacja" required>
+            </div>
+            <div class="field">
+                <label for="klasa">Klasa:</label>
+                <select id="klasa" name="klasa" required>
+                    <option value="Economic">Economic</option>
+                    <option value="Premium">Premium</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="data_wyjazdu">Data wyjazdu:</label>
+                <input type="date" id="data_wyjazdu" name="data_wyjazdu" required>
+            </div>
+        </div>
+        <div class="actions">
+            <button type="submit" name="submit">Zapisz</button>
+            <button type="button" id="edit-button" onclick="editOrder()">Edytuj zamówienie</button>
+            <a href="usun.html" class="delete-order-link">
+                <button type="button">Usuń zamówienie</button>
+            </a>
+        </div>
+
+        
+    </form>
+
+    <!-- Przenieś skrypty w obręb formularza -->
+    <script>
+        // Validate phone number using JavaScript
+        function validatePhoneNumber(number) {
+            const regex = /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{3}$/;
+            return regex.test(number);
+        }
+
+        const phoneInput = document.getElementById("numer_telefonu");
+        phoneInput.addEventListener("blur", function () {
+            if (!validatePhoneNumber(phoneInput.value)) {
+                alert("Nieprawidłowy format numeru telefonu.");
+                phoneInput.focus();
+            }
+        });
+    </script>
+
+    <script>
+        function editOrder() {
+            window.location.href = "edytuj-zamowienie.html";
+        }
+    </script>
+</body>
+</html>
