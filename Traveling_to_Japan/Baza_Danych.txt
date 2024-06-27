@@ -1,0 +1,68 @@
+CREATE TABLE destynacje (
+    id              INT NOT NULL AUTO_INCREMENT,
+    name            VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE klienci (
+    id              INT NOT NULL AUTO_INCREMENT,
+    name            VARCHAR(255) NOT NULL,
+    email           VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE konsultacje (
+    id              INT NOT NULL AUTO_INCREMENT,
+    client_id       INT NOT NULL,
+    date            DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (client_id) REFERENCES klienci(id)
+);
+
+CREATE TABLE koszyk (
+    id              INT NOT NULL AUTO_INCREMENT,
+    client_id       INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (client_id) REFERENCES klienci(id)
+);
+
+CREATE TABLE opinie (
+    id              INT NOT NULL AUTO_INCREMENT,
+    product_id      INT NOT NULL,
+    review          TEXT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (product_id) REFERENCES produkty(id)
+);
+
+CREATE TABLE produkty (
+    id              INT NOT NULL AUTO_INCREMENT,
+    name            VARCHAR(255) NOT NULL,
+    price           DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE uzytkownicy (
+    id              INT NOT NULL AUTO_INCREMENT,
+    username        VARCHAR(255) NOT NULL,
+    password        VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE uzytkownicy_zamowienia (
+    user_id         INT NOT NULL,
+    order_id        INT NOT NULL,
+    PRIMARY KEY (user_id, order_id),
+    FOREIGN KEY (user_id) REFERENCES uzytkownicy(id),
+    FOREIGN KEY (order_id) REFERENCES zamowienia(id)
+);
+
+CREATE TABLE zamowienia (
+    id              INT NOT NULL AUTO_INCREMENT,
+    client_id       INT NOT NULL,
+    product_id      INT NOT NULL,
+    quantity        INT NOT NULL,
+    order_date      DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (client_id) REFERENCES klienci(id),
+    FOREIGN KEY (product_id) REFERENCES produkty(id)
+);
