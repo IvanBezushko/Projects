@@ -1,0 +1,32 @@
+[
+  {
+    "UserNick": "",
+    "Email": "",
+    "Password": "",
+    "ConfirmPassword": ""
+  },
+  {
+    "UserNick": "asdas",
+    "Email": "ivan.bezushko@student.po.edu.pl",
+    "Password": "asdasdasd",
+    "ConfirmPassword": "asdasdasd"
+  },
+  {
+    "UserNick": "asdasq",
+    "Email": "ivan.bezushko1@student.po.edu.pl",
+    "Password": "qweqweqwe",
+    "ConfirmPassword": "qweqweqwe"
+  },
+  {
+    "UserNick": "123",
+    "Email": "asda@ada.com",
+    "Password": "asdasdasd",
+    "ConfirmPassword": "asdasdasd"
+  },
+  {
+    "UserNick": "12345",
+    "Email": "asdas@sdadf.com",
+    "Password": "asdasdasd",
+    "ConfirmPassword": "asdasdasd"
+  }
+]

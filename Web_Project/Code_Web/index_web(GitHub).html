@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spotify OAuth Redirect</title>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            var queryParams = new URLSearchParams(window.location.search);
+            var code = queryParams.get('code');
+            var error = queryParams.get('error');
+            var statusMessage = document.getElementById('status-message');
+
+            if (code) {
+                window.location.href = 'https://localhost:7297/?code=' + encodeURIComponent(code);
+                statusMessage.textContent = 'Przekierowywanie z kodem autoryzacji...';
+            } else if (error) {
+                window.location.href = 'https://localhost:7297/?error=' + encodeURIComponent(error);
+                statusMessage.textContent = 'Przekierowywanie z błędem: ' + error;
+            } else {
+                statusMessage.textContent = 'Nie otrzymano kodu autoryzacji ani komunikatu o błędzie.';
+            }
+        };
+    </script>
+
+    <p id="status-message">Autoryzacja trwa...</p>
+</body>
+</html>

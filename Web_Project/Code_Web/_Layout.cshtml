@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Natsukasiy_Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Natsukasiy_Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+       
+    </header>
+
+    <div class="container1">
+        <div class="container2">
+            <div class="logobar">
+                <img src="~/images/logo.jpg" alt="Logo">
+                <h1>Natsukasiy</h1>
+            </div>
+
+            <div class="leftnavbar">
+                <button onclick="location.href='@Url.Page("/Index")'">
+                    <i class="fa-solid fa-house"></i> Home
+                </button>
+                <button onclick="location.href='@Url.Page("/Privacy")'">
+                    <i class="fa-solid fa-magnifying-glass"></i> Browse
+                </button>
+                <div class="playlist">Random PlayList</div>
+            </div>
+        </div>
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                <div id="content">
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+
+        <div class="rightbar">
+            <button class="registerbut" onclick="location.href='@Url.Page("/Shared/registration")'">
+                Register
+            </button>
+            <button class="loginbut" onclick="location.href='@Url.Page("/Shared/login")'">
+                Login
+            </button>
+
+            <div class="horizontal-line"></div>
+
+            <div class="track-info1">
+                <img src="https://via.placeholder.com/60" alt="Album Cover1">
+                <div class="details1">
+                    <div class="track-name1">TrackName</div>
+                    <div class="artist-name1">Artist</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottombar">
+        <div class="track-info2">
+            <img src="https://via.placeholder.com/60" alt="Album Cover">
+            <div class="details2">
+                <div class="track-name2">TrackName</div>
+                <div class="artist-name2">Artist</div>
+            </div>
+        </div>
+        <div class="container-but-prog">
+            <div class="controls">
+                <button class="control-button previous"><i class="fas fa-backward"></i></button>
+                <button class="control-button play-pause"><i class="fas fa-play"></i></button>
+                <button class="control-button next"><i class="fas fa-forward"></i></button>
+            </div>
+
+            <div class="progress-container" onclick="seek(event)">
+                <div class="progress-bar" style="width: 50%;"></div>
+            </div>
+        </div>
+
+        <div class="volume-control">
+            <button><i class="fa-solid fa-volume-high"></i></button>
+            <input type="range" min="0" max="100" value="100">
+        </div>
+
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        function updateCurrentTrack(track) {
+            console.log('Updating track-info1 and track-info2 with track:', track);
+
+            
+            localStorage.setItem('currentTrack', JSON.stringify(track));
+
+            const trackInfo1 = document.querySelector('.track-info1');
+            if (trackInfo1) {
+                const trackNameElement1 = trackInfo1.querySelector('.track-name1');
+                const artistNameElement1 = trackInfo1.querySelector('.artist-name1');
+                const albumCoverElement1 = trackInfo1.querySelector('img');
+
+                if (trackNameElement1) trackNameElement1.textContent = track.name;
+                if (artistNameElement1) artistNameElement1.textContent = track.artist;
+                if (albumCoverElement1) {
+                    albumCoverElement1.src = track.imageUrl;
+                    albumCoverElement1.alt = track.name;
+                }
+            } else {
+                console.log('track-info1 not found');
+            }
+
+            const trackInfo2 = document.querySelector('.track-info2');
+            if (trackInfo2) {
+                const trackNameElement2 = trackInfo2.querySelector('.track-name2');
+                const artistNameElement2 = trackInfo2.querySelector('.artist-name2');
+                const albumCoverElement2 = trackInfo2.querySelector('img');
+
+                if (trackNameElement2) trackNameElement2.textContent = track.name;
+                if (artistNameElement2) artistNameElement2.textContent = track.artist;
+                if (albumCoverElement2) {
+                    albumCoverElement2.src = track.imageUrl;
+                    albumCoverElement2.alt = track.name;
+                }
+            } else {
+                console.log('track-info2 not found');
+            }
+        }
+
+        function loadCurrentTrack() {
+            const track = JSON.parse(localStorage.getItem('currentTrack'));
+
+            if (track) {
+                const trackInfo1 = document.querySelector('.track-info1');
+                if (trackInfo1) {
+                    const trackNameElement1 = trackInfo1.querySelector('.track-name1');
+                    const artistNameElement1 = trackInfo1.querySelector('.artist-name1');
+                    const albumCoverElement1 = trackInfo1.querySelector('img');
+
+                    if (trackNameElement1) trackNameElement1.textContent = track.name;
+                    if (artistNameElement1) artistNameElement1.textContent = track.artist;
+                    if (albumCoverElement1) {
+                        albumCoverElement1.src = track.imageUrl;
+                        albumCoverElement1.alt = track.name;
+                    }
+                }
+
+                const trackInfo2 = document.querySelector('.track-info2');
+                if (trackInfo2) {
+                    const trackNameElement2 = trackInfo2.querySelector('.track-name2');
+                    const artistNameElement2 = trackInfo2.querySelector('.artist-name2');
+                    const albumCoverElement2 = trackInfo2.querySelector('img');
+
+                    if (trackNameElement2) trackNameElement2.textContent = track.name;
+                    if (artistNameElement2) artistNameElement2.textContent = track.artist;
+                    if (albumCoverElement2) {
+                        albumCoverElement2.src = track.imageUrl;
+                        albumCoverElement2.alt = track.name;
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCurrentTrack();
+        });
+
+
+
+       
+
+       
+    </script>
+</body>
+</html>

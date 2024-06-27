@@ -1,0 +1,1387 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Browse Page";
+}
+
+<style>
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    
+    #tracks-container {
+        width: 98%;
+        background-color: #333;
+        height: 350px;
+        margin: 15px;
+        border-radius: 25px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        cursor:pointer;
+    }
+
+    .tracks1 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-y: auto;
+        width: 100%;
+        max-height: 400px;
+        box-sizing: border-box;
+        margin: 5px;
+    }
+
+        .tracks1::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tracks1::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+            .tracks1::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+    .track-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #444;
+        border-radius: 10px;
+        padding: 10px;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+        .track-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+    .track-info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-grow: 1;
+        overflow: hidden;
+    }
+
+    .track-name-artist {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .track-name {
+        font-size: 16px;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .track-artist {
+        font-size: 12px;
+        color: #aaa;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .track-duration {
+        font-size: 14px;
+        color: #fff;
+        white-space: nowrap;
+        margin-left: auto;
+    }
+
+    .show-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .show-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background-color: #444;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    .show-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+
+    .show-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .show-name {
+        font-size: 16px;
+        color: #fff;
+    }
+
+    .show-description {
+        font-size: 14px;
+        color: #aaa;
+    }
+</style>
+
+<div id="homepage" class="homepage">
+    <h1 class="home">Browse page</h1>
+
+    <div class="lists">
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="Przeglądaj muzykę" />
+            <button id="search-button" class="search-button">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+
+        <div id="tracks-container" class="tracks1"></div>
+        <div id="popularPlayList1" class="popularPlayList1">
+            <div class="playlists" id="playlists-container">
+                
+            </div>
+        </div>
+        <div id="popularGenres" class="popularGenres">
+            <div class="genres" id="genres-container">
+                
+            </div>
+        </div>
+        <div id="popularGenres"  class="popularShows">
+
+            <div class="shows-container" id="shows-container">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const clientId = "7eae723d9e134d2b9a4516d0ca88a7d9";
+        const clientSecret = "2566165e0ddb48e4a6cbb2f1c4ecf2c8";
+        const redirectUri = "https://ivanbezushko.github.io/Uri/index_web.html";
+        let expandedShowId = null;
+        let expandedPlaylistId = null;
+
+        function logMessage(message) {
+            console.log(message);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            const searchInput = document.getElementById('search-input');
+            const tracksContainer = document.getElementById('tracks-container');
+
+            if (accessToken) {
+                logMessage("Token dostępu: " + accessToken);
+                loadContent(accessToken);
+                loadShows(accessToken);
+                loadGenres(accessToken);
+                loadRandomPlaylists(accessToken);
+
+               
+                tracksContainer.innerHTML = '';
+                tracksContainer.style.display = 'none';
+
+                if (searchInput) {
+                    searchInput.addEventListener('input', () => {
+                        const query = searchInput.value.trim();
+                        if (query) {
+                            searchTracks(accessToken, query);
+                        } else {
+                            tracksContainer.style.display = 'none';
+                            tracksContainer.innerHTML = ''; 
+                        }
+                    });
+                }
+            } else {
+                logMessage("Nie znaleziono tokenu dostępu.");
+                window.location.href = '/signin-spotify?returnUrl=' + encodeURIComponent(window.location.pathname);
+            }
+        });
+
+        async function searchTracks(token, query) {
+            try {
+                const response = await fetch(`/api/backend/search?query=${encodeURIComponent(query)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Nie udało się wyszukać utworów');
+                }
+
+                const tracks = await response.json();
+                const tracksContainer = document.getElementById('tracks-container');
+                if (tracksContainer) {
+                    tracksContainer.innerHTML = '';
+                    if (tracks.length > 0) {
+                        tracksContainer.style.display = 'block';
+                    } else {
+                        tracksContainer.style.display = 'none';
+                    }
+
+                    tracks.forEach(track => {
+                        const trackElement = document.createElement('div');
+                        trackElement.className = 'track-item';
+                        trackElement.innerHTML = `
+                            <div class="track-info">
+                                <img src="${track.imageUrl}" alt="${track.name}" class="track-image" />
+                                <div>
+                                    <div class="track-name">${track.name}</div>
+                                    <div class="track-artist">${track.artist}</div>
+                                </div>
+                            </div>
+                            <div class="track-duration">${formatDuration(track.duration)}</div>
+                        `;
+                        trackElement.addEventListener('click', () => {
+                            const contextUri = `spotify:album:${track.albumId}`;
+                            logMessage(`Track clicked: ${track.name} by ${track.artist} (URI: ${track.uri}, Context URI: ${contextUri})`);
+                            playTrack(track.uri, contextUri, token);
+                        });
+                        tracksContainer.appendChild(trackElement);
+                    });
+
+                    logMessage("Wyniki wyszukiwania załadowane pomyślnie.");
+                } else {
+                    throw new Error('Nie znaleziono kontenera utworów.');
+                }
+            } catch (error) {
+                console.error('Nie udało się wyszukać utworów:', error);
+                logMessage('Nie udało się wyszukać utworów: ' + error.message);
+            }
+        }
+
+
+
+
+        function formatDuration(durationMs) {
+            const minutes = Math.floor(durationMs / 60000);
+            const seconds = ((durationMs % 60000) / 1000).toFixed(0);
+            return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        }
+
+        async function loadContent() {
+            logMessage("Loading content...");
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                logMessage("Access token: " + accessToken);
+
+                const response = await fetch('/api/backend/playlists', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load content');
+                }
+
+                const playlists = await response.json();
+                const playlistsContainer = document.getElementById('playlists-container');
+                playlistsContainer.innerHTML = ''; 
+                playlistsContainer.style.flexDirection = 'row'; 
+                playlistsContainer.style.gap = '10px';
+                playlistsContainer.style.overflowY = 'hidden';
+                playlistsContainer.style.overflowX = 'auto'; 
+                playlistsContainer.style.height = 'auto'; 
+
+                playlists.forEach(playlist => {
+                    const playlistElement = document.createElement('div');
+                    playlistElement.className = 'playlist-item';
+                    playlistElement.innerHTML = `
+                                        <img src="${playlist.imageUrl}" alt="${playlist.name}" class="playlist-image" />
+                                        <div class="playlist-name">${playlist.name}</div>
+                                    `;
+                    playlistElement.addEventListener('click', () => togglePlaylist(playlist.id, playlist.name));
+                    playlistsContainer.appendChild(playlistElement);
+                });
+
+                logMessage("Content loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load content:', error);
+                logMessage('Failed to load content: ' + error.message);
+            }
+        }
+
+        async function togglePlaylist(playlistId, playlistName) {
+            if (expandedPlaylistId === playlistId) {
+                collapsePlaylist();
+            } else {
+                await loadPlaylistTracks(playlistId, playlistName);
+            }
+        }
+
+        function collapsePlaylist() {
+            const playlistsContainer = document.getElementById('playlists-container');
+            playlistsContainer.style.flexDirection = 'row'; 
+            playlistsContainer.style.gap = '10px';
+            playlistsContainer.style.overflowY = 'hidden';
+            playlistsContainer.style.overflowX = 'auto'; 
+            playlistsContainer.style.height = 'auto';
+            playlistsContainer.innerHTML = ''; 
+            expandedPlaylistId = null;
+            loadContent(); 
+        }
+
+        async function loadPlaylistTracks(playlistId, playlistName) {
+            logMessage("Loading playlist tracks for playlist: " + playlistId);
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                const response = await fetch(`/api/backend/playlists/${playlistId}/tracks`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load playlist tracks');
+                }
+
+                const tracks = await response.json();
+                const playlistsContainer = document.getElementById('playlists-container');
+                playlistsContainer.innerHTML = `
+                                    <div class="playlist-header">
+                                        <button class="back-button" onclick="collapsePlaylist()">
+                                            <i class="fas fa-arrow-left"></i>
+                                        </button>
+                                        <h2>${playlistName}</h2>
+                                    </div>
+                                `; 
+
+                
+                playlistsContainer.style.flexDirection = 'column';
+                playlistsContainer.style.gap = '10px';
+                playlistsContainer.style.overflowY = 'auto';
+                playlistsContainer.style.overflowX = 'hidden';
+                playlistsContainer.style.height = '400px'; 
+
+                tracks.forEach(track => {
+                    const trackElement = document.createElement('div');
+                    trackElement.className = 'track-item';
+                    trackElement.innerHTML = `
+                                        <img src="${track.imageUrl}" alt="${track.name}" class="track-image" />
+                                                <div class="track-info" style="display: flex; flex-direction: column; align-items: flex-start;">
+                                            <div class="track-name">${track.name}</div>
+                                            <div class="track-artist">${track.artist}</div>
+                                        </div>
+                                        <div class="track-duration">${formatDuration(track.duration)}</div>
+                                    `;
+                    playlistsContainer.appendChild(trackElement);
+                });
+
+                expandedPlaylistId = playlistId; 
+
+                logMessage("Playlist tracks loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load playlist tracks:', error);
+                logMessage('Failed to load playlist tracks: ' + error.message);
+            }
+        }
+
+        let expandedGenreId = null; 
+
+
+
+        async function loadGenres() {
+            logMessage("Loading genres...");
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                const response = await fetch('/api/backend/genres', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load genres');
+                }
+
+                const genres = await response.json();
+                logMessage("Genres data: " + JSON.stringify(genres));
+
+                const genresContainer = document.getElementById('genres-container');
+                genresContainer.innerHTML = ''; 
+
+                genres.forEach(genre => {
+                    const genreElement = document.createElement('div');
+                    genreElement.className = 'genre-item';
+                    genreElement.innerHTML = `
+                        <img src="${genre.imageUrl}" alt="${genre.name}" class="genre-image" />
+                        <div class="genre-name">${genre.name}</div>
+                    `;
+                    genreElement.addEventListener('click', () => {
+                        logMessage(`Genre clicked: ${genre.name} (ID: ${genre.id})`);
+                        toggleGenre(genre.id, genre.name);
+                    });
+                    genresContainer.appendChild(genreElement);
+                });
+
+                logMessage("Genres loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load genres:', error);
+                logMessage('Failed to load genres: ' + error.message);
+            }
+        }
+
+        async function toggleGenre(genreId, genreName) {
+            if (expandedGenreId === genreId) {
+                collapseGenre();
+            } else {
+                await loadGenreDetails(genreId, genreName);
+            }
+        }
+
+        function collapseGenre() {
+            const genresContainer = document.getElementById('genres-container');
+            genresContainer.style.flexDirection = 'row'; 
+            genresContainer.style.gap = '10px';
+            genresContainer.style.overflowY = 'hidden';
+            genresContainer.style.overflowX = 'auto'; 
+            genresContainer.style.height = 'auto';
+            genresContainer.innerHTML = ''; 
+            expandedGenreId = null;
+            loadGenres(); 
+        }
+
+
+
+        let localPlaylists = {};
+        let currentLocalPlaylist = [];
+        let currentLocalTrackIndex = 0;
+
+        function createLocalPlaylist(genreId, tracks) {
+            localPlaylists[genreId] = tracks;
+            currentLocalPlaylist = tracks;
+            currentLocalTrackIndex = 0;
+        }
+
+        function resetLocalPlaylist() {
+            currentLocalPlaylist = [];
+            currentLocalTrackIndex = 0;
+        }
+
+        async function togglePlaylist(playlistId, playlistName) {
+            resetLocalPlaylist(); 
+
+            if (expandedPlaylistId === playlistId) {
+                collapsePlaylist();
+            } else {
+                await loadPlaylistTracks(playlistId, playlistName);
+            }
+        }
+
+        async function toggleGenre(genreId, genreName) {
+            resetLocalPlaylist(); 
+
+            if (expandedGenreId === genreId) {
+                collapseGenre();
+            } else {
+                await loadGenreDetails(genreId, genreName);
+            }
+        }
+
+
+
+
+        async function loadGenreDetails(genreId, genreName) {
+            logMessage("Loading details for genre: " + genreId);
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                const response = await fetch(`/api/backend/genres/${genreId}/details`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load genre details');
+                }
+
+                const details = await response.json();
+                logMessage("Genre details data: " + JSON.stringify(details));
+
+                
+                currentLocalPlaylist = details.tracks;
+                currentLocalTrackIndex = 0;
+
+                const genresContainer = document.getElementById('genres-container');
+                genresContainer.innerHTML = `
+                    <div class="genre-header">
+                        <button class="back-button" onclick="collapseGenre()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>${genreName}</h2>
+                    </div>
+                `;
+
+                genresContainer.style.flexDirection = 'column';
+                genresContainer.style.gap = '10px';
+                genresContainer.style.overflowY = 'auto';
+                genresContainer.style.overflowX = 'hidden';
+                genresContainer.style.height = '400px';
+
+                details.tracks.forEach((track, index) => {
+                    logMessage(`Track details: ${JSON.stringify(track)}`);
+                    const trackElement = document.createElement('div');
+                    trackElement.className = 'track-item';
+                    trackElement.innerHTML = `
+                        <img src="${track.imageUrl}" alt="${track.name}" class="track-image" />
+                        <div class="track-info" style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <div class="track-name">${track.name}</div>
+                            <div class="track-artist">${track.artist}</div>
+                        </div>
+                        <div class="track-duration">${formatDuration(track.duration)}</div>
+                    `;
+                    trackElement.addEventListener('click', () => {
+                        currentLocalTrackIndex = index; 
+                        if (track.uri) {
+                            const contextUri = track.contextUri ? track.contextUri : `spotify:genre:${genreId}`;
+                            logMessage(`Track clicked in genre: ${track.name} by ${track.artist} (URI: ${track.uri}, Context URI: ${contextUri})`);
+                            playTrack(track.uri, contextUri, accessToken);
+                        } else {
+                            logMessage(`Track URI is null for track: ${track.name} by ${track.artist}`);
+                        }
+                    });
+                    genresContainer.appendChild(trackElement);
+                });
+
+                expandedGenreId = genreId;
+
+                logMessage("Genre details loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load genre details:', error);
+                logMessage('Failed to load genre details: ' + error.message);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+       
+
+  
+
+
+
+        function formatDuration(durationMs) {
+            const minutes = Math.floor(durationMs / 60000);
+            const seconds = ((durationMs % 60000) / 1000).toFixed(0);
+            return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        }
+
+       
+
+        async function loadTracks(token) {
+            try {
+                const response = await fetch('/api/backend/tracks', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Nie udało się załadować utworów');
+                }
+
+                const tracks = await response.json();
+                const tracksContainer = document.getElementById('tracks-container');
+                if (tracksContainer) {
+                    tracksContainer.innerHTML = ''; 
+
+                    tracks.forEach(track => {
+                        const trackElement = document.createElement('div');
+                        trackElement.className = 'track-item';
+                        trackElement.innerHTML = `
+                                    <img src="${track.imageUrl}" alt="${track.name}" class="track-image" />
+                                    <div class="track-info">
+                                        <div class="track-name">${track.name}</div>
+                                        <div class="track-artist">${track.artist}</div>
+                                    </div>
+                                    <div class="track-duration">${formatDuration(track.duration)}</div>
+                                `;
+                        tracksContainer.appendChild(trackElement);
+                    });
+
+                    logMessage("Utwory załadowane pomyślnie.");
+                } else {
+                    throw new Error('Nie znaleziono kontenera utworów.');
+                }
+            } catch (error) {
+                console.error('Nie udało się załadować utworów:', error);
+                logMessage('Nie udało się załadować utworów: ' + error.message);
+            }
+        }
+
+        async function loadShows() {
+            logMessage("Attempting to load shows...");
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                logMessage("Access token: " + accessToken);
+
+                const response = await fetch('/api/backend/shows', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load shows');
+                }
+
+                const shows = await response.json();
+                logMessage("Shows data: " + JSON.stringify(shows)); 
+
+                const showsContainer = document.getElementById('shows-container');
+                showsContainer.innerHTML = ''; 
+                showsContainer.style.flexDirection = 'row'; 
+                showsContainer.style.gap = '10px';
+                showsContainer.style.overflowY = 'hidden';
+                showsContainer.style.overflowX = 'auto'; 
+                showsContainer.style.height = 'auto'; 
+
+                shows.forEach(show => {
+                    const showElement = document.createElement('div');
+                    showElement.className = 'show-item';
+                    showElement.innerHTML = `
+                                                        <img src="${show.imageUrl}" alt="${show.name}" class="show-image" />
+                                                        <div class="show-name">${show.name}</div>
+                                                    `;
+                    showElement.addEventListener('click', () => toggleShow(show.id, show.name));
+                    showsContainer.appendChild(showElement);
+                });
+
+                logMessage("Shows loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load shows:', error);
+                logMessage('Failed to load shows: ' + error.message);
+            }
+        }
+
+        async function toggleShow(showId, showName) {
+            if (expandedShowId === showId) {
+                collapseShow();
+            } else {
+                await loadShowDetails(showId, showName);
+            }
+        }
+
+        function collapseShow() {
+            const showsContainer = document.getElementById('shows-container');
+            showsContainer.style.flexDirection = 'row'; 
+            showsContainer.style.gap = '10px';
+            showsContainer.style.overflowY = 'hidden';
+            showsContainer.style.overflowX = 'auto'; 
+            showsContainer.style.height = 'auto';
+            showsContainer.innerHTML = ''; 
+            expandedShowId = null;
+            loadShows(); 
+        }
+
+        async function loadShowDetails(showId, showName) {
+            logMessage("Loading show details for show: " + showId);
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                const response = await fetch(`/api/backend/shows/${showId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load show details');
+                }
+
+                const showDetails = await response.json();
+                const showsContainer = document.getElementById('shows-container');
+                showsContainer.innerHTML = `
+                                    <div class="show-header">
+                                        <button class="back-button" onclick="collapseShow()">
+                                            <i class="fas fa-arrow-left"></i>
+                                        </button>
+                                        <h2>${showName}</h2>
+                                    </div>
+                                `; 
+
+               
+                showsContainer.style.flexDirection = 'column';
+                showsContainer.style.gap = '10px';
+                showsContainer.style.overflowY = 'auto'; 
+                showsContainer.style.overflowX = 'hidden';
+                showsContainer.style.height = '400px'; 
+
+                showDetails.episodes.forEach(episode => {
+                    const episodeElement = document.createElement('div');
+                    episodeElement.className = 'show-item';
+                    episodeElement.style.flexDirection = 'row';
+                    episodeElement.innerHTML = `
+                                        <img src="${episode.imageUrl}" alt="${episode.name}" class="show-image" />
+                                        <div class="show-info">
+                                            <div class="show-name">${episode.name}</div>
+                                            <div class="show-description">${episode.description}</div>
+                                        </div>
+                                    `;
+                    episodeElement.addEventListener('click', () => {
+                        logMessage(`Episode clicked in show: ${episode.name} (URI: ${episode.uri}, Context URI: ${showDetails.uri})`);
+                        playTrack(episode.uri, showDetails.uri, accessToken); 
+                    });
+                    showsContainer.appendChild(episodeElement);
+                });
+
+                expandedShowId = showId; 
+
+                logMessage("Show details loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load show details:', error);
+                logMessage('Failed to load show details: ' + error.message);
+            }
+        }
+
+        let currentTrackIndex = 0;
+        let currentPlaylist = [];
+
+        async function loadPlaylistTracks(playlistId, playlistName) {
+            logMessage("Loading playlist tracks for playlist: " + playlistId);
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                const response = await fetch(`/api/backend/playlists/${playlistId}/tracks`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load playlist tracks');
+                }
+
+                currentPlaylist = await response.json();
+                currentTrackIndex = 0; 
+
+                const playlistsContainer = document.getElementById('playlists-container');
+                playlistsContainer.innerHTML = `
+                    <div class="playlist-header">
+                        <button class="back-button" onclick="collapsePlaylist()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>${playlistName}</h2>
+                    </div>
+                `;
+
+                playlistsContainer.style.flexDirection = 'column';
+                playlistsContainer.style.gap = '10px';
+                playlistsContainer.style.overflowY = 'auto';
+                playlistsContainer.style.overflowX = 'hidden';
+                playlistsContainer.style.height = '400px';
+
+                currentPlaylist.forEach((track, index) => {
+                    const trackElement = document.createElement('div');
+                    trackElement.className = 'track-item';
+                    trackElement.innerHTML = `
+                        <img src="${track.imageUrl}" alt="${track.name}" class="track-image" />
+                        <div class="track-info" style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <div class="track-name">${track.name}</div>
+                            <div class="track-artist">${track.artist}</div>
+                        </div>
+                        <div class="track-duration">${formatDuration(track.duration)}</div>
+                    `;
+                    trackElement.addEventListener('click', () => {
+                        currentTrackIndex = index; 
+                        const contextUri = `spotify:playlist:${playlistId}`;
+                        logMessage(`Track clicked in playlist: ${track.name} by ${track.artist} (URI: ${track.uri}, Context URI: ${contextUri})`);
+                        playTrack(track.uri, contextUri, accessToken);
+                    });
+                    playlistsContainer.appendChild(trackElement);
+                });
+
+                expandedPlaylistId = playlistId;
+
+                logMessage("Playlist tracks loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load playlist tracks:', error);
+                logMessage('Failed to load playlist tracks: ' + error.message);
+            }
+        }
+
+
+
+        async function skipToNext() {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            if (currentTrackIndex + 1 < currentPlaylist.length) {
+                currentTrackIndex++;
+                const nextTrack = currentPlaylist[currentTrackIndex];
+                playTrack(nextTrack.uri, nextTrack.contextUri, accessToken);
+            } else if (currentLocalTrackIndex + 1 < currentLocalPlaylist.length) {
+                currentLocalTrackIndex++;
+                const nextTrack = currentLocalPlaylist[currentLocalTrackIndex];
+                playTrack(nextTrack.uri, nextTrack.contextUri, accessToken);
+            } else {
+                console.log('No next track available.');
+            }
+        }
+
+
+        async function skipToPrevious() {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            if (currentTrackIndex - 1 >= 0) {
+                currentTrackIndex--;
+                const prevTrack = currentPlaylist[currentTrackIndex];
+                playTrack(prevTrack.uri, prevTrack.contextUri, accessToken);
+            } else if (currentLocalTrackIndex - 1 >= 0) {
+                currentLocalTrackIndex--;
+                const prevTrack = currentLocalPlaylist[currentLocalTrackIndex];
+                playTrack(prevTrack.uri, prevTrack.contextUri, accessToken);
+            } else {
+                console.log('No previous track available.');
+            }
+        }
+
+
+
+
+
+
+
+        async function playTrack(trackUri, contextUri, accessToken) {
+            logMessage("Próba odtworzenia utworu: " + trackUri);
+
+            try {
+                if (!accessToken) {
+                    throw new Error('Brak access tokena.');
+                }
+
+                if (!trackUri || !contextUri) {
+                    throw new Error('Brak URI lub Context URI.');
+                }
+
+               
+                const devicesResponse = await fetch('/api/backend/devices', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!devicesResponse.ok) {
+                    throw new Error('Nie udało się pobrać dostępnych urządzeń');
+                }
+
+                const devices = await devicesResponse.json();
+                const activeDevice = devices.find(device => device.is_active) || devices[0];
+
+                if (!activeDevice) {
+                    throw new Error('Brak aktywnych urządzeń do odtwarzania');
+                }
+
+                logMessage("Używane urządzenie: " + activeDevice.name);
+
+                
+                const requestBody = {
+                    context_uri: contextUri,
+                    offset: {
+                        uri: trackUri
+                    },
+                    position_ms: 0
+                };
+
+                const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${activeDevice.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error('Nie udało się odtworzyć utworu: ' + errorText);
+                }
+
+                logMessage("Pomyślnie odtwarzany utwór na urządzeniu: " + activeDevice.name);
+
+                let trackDetailsResponse;
+                let trackDetails;
+
+                if (trackUri.startsWith('spotify:track:')) {
+                    trackDetailsResponse = await fetch(`https://api.spotify.com/v1/tracks/${trackUri.split(':')[2]}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+
+                    if (!trackDetailsResponse.ok) {
+                        throw new Error('Failed to fetch track details');
+                    }
+
+                    trackDetails = await trackDetailsResponse.json();
+
+                    const track = {
+                        name: trackDetails.name,
+                        artist: trackDetails.artists[0].name,
+                        imageUrl: trackDetails.album.images[0].url
+                    };
+
+                    updateCurrentTrack(track);
+
+                } else if (trackUri.startsWith('spotify:episode:')) {
+                    trackDetailsResponse = await fetch(`https://api.spotify.com/v1/episodes/${trackUri.split(':')[2]}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+
+                    if (!trackDetailsResponse.ok) {
+                        throw new Error('Failed to fetch episode details');
+                    }
+
+                    trackDetails = await trackDetailsResponse.json();
+
+                    const track = {
+                        name: trackDetails.name,
+                        artist: trackDetails.show.publisher,
+                        imageUrl: trackDetails.images[0].url
+                    };
+
+                    updateCurrentTrack(track);
+                }
+
+                updatePlayPauseButton(true);
+                isPlaying = true;
+
+            } catch (error) {
+                console.error('Nie udało się odtworzyć utworu:', error);
+                logMessage('Nie udało się odtworzyć utworu: ' + error.message);
+            }
+        }
+
+
+
+
+
+
+
+        function updateCurrentTrack(track) {
+            console.log('Updating track-info1 and track-info2 with track:', track);
+
+            const trackInfo1 = document.querySelector('.track-info1');
+            if (trackInfo1) {
+                const trackNameElement1 = trackInfo1.querySelector('.track-name1');
+                const artistNameElement1 = trackInfo1.querySelector('.artist-name1');
+                const albumCoverElement1 = trackInfo1.querySelector('img');
+
+                if (trackNameElement1) trackNameElement1.textContent = track.name;
+                if (artistNameElement1) artistNameElement1.textContent = track.artist;
+                if (albumCoverElement1) {
+                    albumCoverElement1.src = track.imageUrl;
+                    albumCoverElement1.alt = track.name;
+                }
+            } else {
+                console.log('track-info1 not found');
+            }
+
+            const trackInfo2 = document.querySelector('.track-info2');
+            if (trackInfo2) {
+                const trackNameElement2 = trackInfo2.querySelector('.track-name2');
+                const artistNameElement2 = trackInfo2.querySelector('.artist-name2');
+                const albumCoverElement2 = trackInfo2.querySelector('img');
+
+                if (trackNameElement2) trackNameElement2.textContent = track.name;
+                if (artistNameElement2) artistNameElement2.textContent = track.artist;
+                if (albumCoverElement2) {
+                    albumCoverElement2.src = track.imageUrl;
+                    albumCoverElement2.alt = track.name;
+                }
+            } else {
+                console.log('track-info2 not found');
+            }
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+           
+            document.querySelector('.control-button.previous').addEventListener('click', skipToPrevious);
+            document.querySelector('.control-button.play-pause').addEventListener('click', togglePlayPause);
+            document.querySelector('.control-button.next').addEventListener('click', skipToNext);
+
+            let currentTrackIndex = 0;
+            let currentPlaylist = [];
+
+            let isPlaying = false;
+
+            async function togglePlayPause() {
+                try {
+                    const accessToken = localStorage.getItem('spotifyAccessToken');
+                    const response = await fetch('/api/backend/playback/toggle', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Nie udało się zmienić stanu odtwarzania.');
+                    }
+
+                   
+                    isPlaying = !isPlaying;
+
+                    
+                    updatePlayPauseButton(isPlaying);
+
+                    logMessage('Zmieniono stan odtwarzania.');
+                } catch (error) {
+                    console.error('Błąd zmiany stanu odtwarzania:', error);
+                }
+            }
+
+            function updatePlayPauseButton(isPlaying) {
+                const playPauseButton = document.querySelector('.control-button.play-pause i');
+                if (isPlaying) {
+                    playPauseButton.classList.remove('fa-pause');
+                    playPauseButton.classList.add('fa-play');
+                } else {
+                    playPauseButton.classList.remove('fa-play');
+                    playPauseButton.classList.add('fa-pause');
+                }
+            }
+
+            async function initializePlaybackState() {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    console.error('No access token found.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('https://api.spotify.com/v1/me/player', {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch current playback state');
+                    }
+
+                    const data = await response.json();
+                    isPlaying = data.is_playing;
+                    updatePlayPauseButton(isPlaying);
+
+                } catch (error) {
+                    console.error('Failed to initialize playback state:', error);
+                }
+            }
+
+            
+            initializePlaybackState();
+
+        });
+
+
+        let progressInterval;
+
+        async function updateProgressBar() {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            try {
+                const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch current playback state');
+                }
+
+                const data = await response.json();
+                const progressMs = data.progress_ms;
+                const durationMs = data.item.duration_ms;
+
+                const progressPercent = (progressMs / durationMs) * 100;
+
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = `${progressPercent}%`;
+                }
+
+            } catch (error) {
+                console.error('Failed to update progress bar:', error);
+            }
+        }
+
+        function startProgressBarUpdater() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            progressInterval = setInterval(updateProgressBar, 1000);
+        }
+
+        function stopProgressBarUpdater() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            startProgressBarUpdater();
+        });
+
+        async function seek(event) {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            try {
+                const progressContainer = document.querySelector('.progress-container');
+                const rect = progressContainer.getBoundingClientRect();
+                const offsetX = event.clientX - rect.left;
+                const containerWidth = rect.width;
+                const seekPercent = offsetX / containerWidth;
+
+                const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch current playback state');
+                }
+
+                const data = await response.json();
+                const durationMs = data.item.duration_ms;
+                const newPositionMs = Math.round(seekPercent * durationMs);
+
+                const seekResponse = await fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${newPositionMs}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!seekResponse.ok) {
+                    throw new Error('Failed to seek to the new position');
+                }
+
+                
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = `${seekPercent * 100}%`;
+                }
+
+               
+                startProgressBarUpdater();
+
+            } catch (error) {
+                console.error('Failed to seek to the new position:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+           
+            startProgressBarUpdater();
+        });
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const volumeRange = document.querySelector('.volume-control input[type="range"]');
+
+            volumeRange.addEventListener('input', function () {
+                const value = volumeRange.value;
+                updateVolumeBar(value);
+                setVolume(value);
+            });
+
+            function updateVolumeBar(value) {
+                volumeRange.style.setProperty('--volume-level', `${value}%`);
+            }
+
+            async function setVolume(volume) {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    console.error('No access token found.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/backend/volume', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ volume: parseInt(volume, 10) })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to set volume.');
+                    }
+
+                    console.log('Volume set successfully.');
+                } catch (error) {
+                    console.error('Failed to set volume:', error);
+                }
+            }
+
+           
+            updateVolumeBar(volumeRange.value);
+        });
+
+
+    </script>
+}

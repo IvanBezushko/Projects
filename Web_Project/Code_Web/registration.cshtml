@@ -1,0 +1,641 @@
+﻿@page
+@model Natsukasiy_Web.Pages.Shared.registrationModel
+@{
+}
+
+<div id="homepage" class="homepage">
+    <h1 class="home">Registration Page</h1>
+
+    <div class="registration-container">
+        <form method="post" class="registration-form" id="registrationForm">
+            <h2>Registration</h2>
+            <div class="form-group">
+                <input asp-for="Input.UserNick" class="form-control" placeholder="User Nick" />
+                <span asp-validation-for="Input.UserNick" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.Password" class="form-control" type="password" placeholder="Password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn-primary">Registration</button>
+        </form>
+    </div>
+
+   
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+
+
+        function submitForm() {
+            const form = document.getElementById('registrationForm');
+            const formData = new FormData(form);
+
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('/save-registration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Registration failed');
+                });
+        }
+
+
+
+        const clientId = "7eae723d9e134d2b9a4516d0ca88a7d9";
+        const clientSecret = "2566165e0ddb48e4a6cbb2f1c4ecf2c8";
+        const redirectUri = "https://ivanbezushko.github.io/Uri/index_web.html";
+        let expandedShowId = null;
+        let expandedPlaylistId = null; // Keep track of the expanded playlist
+
+        function logMessage(message) {
+            console.log(message);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            const searchInput = document.getElementById('search-input');
+            const tracksContainer = document.getElementById('tracks-container');
+
+            if (accessToken) {
+                logMessage("Token dostępu: " + accessToken);
+                loadContent(accessToken);
+                loadShows(accessToken);
+                loadGenres(accessToken);
+                loadRandomPlaylists(accessToken);
+
+                // Wyczyszczenie zawartości tracksContainer na początku
+                tracksContainer.innerHTML = '';
+                tracksContainer.style.display = 'none';
+
+                // Dodaj obsługę inputu pola wyszukiwania
+                if (searchInput) {
+                    searchInput.addEventListener('input', () => {
+                        const query = searchInput.value.trim();
+                        if (query) {
+                            searchTracks(accessToken, query);
+                        } else {
+                            tracksContainer.style.display = 'none';
+                            tracksContainer.innerHTML = ''; // Wyczyść poprzednią zawartość
+                        }
+                    });
+                }
+            } else {
+                logMessage("Nie znaleziono tokenu dostępu.");
+                window.location.href = '/signin-spotify?returnUrl=' + encodeURIComponent(window.location.pathname);
+            }
+        });
+
+        let currentTrackIndex = 0;
+        let currentPlaylist = [];
+
+        async function loadPlaylistTracks(playlistId, playlistName) {
+            logMessage("Loading playlist tracks for playlist: " + playlistId);
+
+            try {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    throw new Error('No access token found.');
+                }
+
+                const response = await fetch(`/api/backend/playlists/${playlistId}/tracks`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load playlist tracks');
+                }
+
+                currentPlaylist = await response.json();
+                currentTrackIndex = 0; // Initialize the track index to the first track
+
+                const playlistsContainer = document.getElementById('playlists-container');
+                playlistsContainer.innerHTML = `
+                            <div class="playlist-header">
+                                <button class="back-button" onclick="collapsePlaylist()">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <h2>${playlistName}</h2>
+                            </div>
+                        `;
+
+                playlistsContainer.style.flexDirection = 'column';
+                playlistsContainer.style.gap = '10px';
+                playlistsContainer.style.overflowY = 'auto';
+                playlistsContainer.style.overflowX = 'hidden';
+                playlistsContainer.style.height = '400px';
+
+                currentPlaylist.forEach((track, index) => {
+                    const trackElement = document.createElement('div');
+                    trackElement.className = 'track-item';
+                    trackElement.innerHTML = `
+                                <img src="${track.imageUrl}" alt="${track.name}" class="track-image" />
+                                <div class="track-info" style="display: flex; flex-direction: column; align-items: flex-start;">
+                                    <div class="track-name">${track.name}</div>
+                                    <div class="track-artist">${track.artist}</div>
+                                </div>
+                                <div class="track-duration">${formatDuration(track.duration)}</div>
+                            `;
+                    trackElement.addEventListener('click', () => {
+                        currentTrackIndex = index; // Set the current track index
+                        const contextUri = `spotify:playlist:${playlistId}`;
+                        logMessage(`Track clicked in playlist: ${track.name} by ${track.artist} (URI: ${track.uri}, Context URI: ${contextUri})`);
+                        playTrack(track.uri, contextUri, accessToken);
+                    });
+                    playlistsContainer.appendChild(trackElement);
+                });
+
+                expandedPlaylistId = playlistId;
+
+                logMessage("Playlist tracks loaded successfully.");
+            } catch (error) {
+                console.error('Failed to load playlist tracks:', error);
+                logMessage('Failed to load playlist tracks: ' + error.message);
+            }
+        }
+
+
+
+        async function skipToNext() {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            if (currentTrackIndex + 1 < currentPlaylist.length) {
+                currentTrackIndex++;
+                const nextTrack = currentPlaylist[currentTrackIndex];
+                playTrack(nextTrack.uri, nextTrack.contextUri, accessToken);
+            } else if (currentLocalTrackIndex + 1 < currentLocalPlaylist.length) {
+                currentLocalTrackIndex++;
+                const nextTrack = currentLocalPlaylist[currentLocalTrackIndex];
+                playTrack(nextTrack.uri, nextTrack.contextUri, accessToken);
+            } else {
+                console.log('No next track available.');
+            }
+        }
+
+
+        async function skipToPrevious() {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            if (currentTrackIndex - 1 >= 0) {
+                currentTrackIndex--;
+                const prevTrack = currentPlaylist[currentTrackIndex];
+                playTrack(prevTrack.uri, prevTrack.contextUri, accessToken);
+            } else if (currentLocalTrackIndex - 1 >= 0) {
+                currentLocalTrackIndex--;
+                const prevTrack = currentLocalPlaylist[currentLocalTrackIndex];
+                playTrack(prevTrack.uri, prevTrack.contextUri, accessToken);
+            } else {
+                console.log('No previous track available.');
+            }
+        }
+
+
+
+
+
+
+
+        async function playTrack(trackUri, contextUri, accessToken) {
+            logMessage("Próba odtworzenia utworu: " + trackUri);
+
+            try {
+                if (!accessToken) {
+                    throw new Error('Brak access tokena.');
+                }
+
+                if (!trackUri || !contextUri) {
+                    throw new Error('Brak URI lub Context URI.');
+                }
+
+                // Sprawdź dostępne urządzenia
+                const devicesResponse = await fetch('/api/backend/devices', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!devicesResponse.ok) {
+                    throw new Error('Nie udało się pobrać dostępnych urządzeń');
+                }
+
+                const devices = await devicesResponse.json();
+                const activeDevice = devices.find(device => device.is_active) || devices[0];
+
+                if (!activeDevice) {
+                    throw new Error('Brak aktywnych urządzeń do odtwarzania');
+                }
+
+                logMessage("Używane urządzenie: " + activeDevice.name);
+
+                // Rozpocznij odtwarzanie utworu na aktywnym urządzeniu
+                const requestBody = {
+                    context_uri: contextUri,
+                    offset: {
+                        uri: trackUri
+                    },
+                    position_ms: 0
+                };
+
+                const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${activeDevice.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error('Nie udało się odtworzyć utworu: ' + errorText);
+                }
+
+                logMessage("Pomyślnie odtwarzany utwór na urządzeniu: " + activeDevice.name);
+
+                let trackDetailsResponse;
+                let trackDetails;
+
+                if (trackUri.startsWith('spotify:track:')) {
+                    trackDetailsResponse = await fetch(`https://api.spotify.com/v1/tracks/${trackUri.split(':')[2]}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+
+                    if (!trackDetailsResponse.ok) {
+                        throw new Error('Failed to fetch track details');
+                    }
+
+                    trackDetails = await trackDetailsResponse.json();
+
+                    const track = {
+                        name: trackDetails.name,
+                        artist: trackDetails.artists[0].name,
+                        imageUrl: trackDetails.album.images[0].url
+                    };
+
+                    updateCurrentTrack(track);
+
+                } else if (trackUri.startsWith('spotify:episode:')) {
+                    trackDetailsResponse = await fetch(`https://api.spotify.com/v1/episodes/${trackUri.split(':')[2]}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+
+                    if (!trackDetailsResponse.ok) {
+                        throw new Error('Failed to fetch episode details');
+                    }
+
+                    trackDetails = await trackDetailsResponse.json();
+
+                    const track = {
+                        name: trackDetails.name,
+                        artist: trackDetails.show.publisher,
+                        imageUrl: trackDetails.images[0].url
+                    };
+
+                    updateCurrentTrack(track);
+                }
+
+                updatePlayPauseButton(true);
+                isPlaying = true;
+
+            } catch (error) {
+                console.error('Nie udało się odtworzyć utworu:', error);
+                logMessage('Nie udało się odtworzyć utworu: ' + error.message);
+            }
+        }
+
+
+
+
+
+
+
+        function updateCurrentTrack(track) {
+            console.log('Updating track-info1 and track-info2 with track:', track);
+
+            const trackInfo1 = document.querySelector('.track-info1');
+            if (trackInfo1) {
+                const trackNameElement1 = trackInfo1.querySelector('.track-name1');
+                const artistNameElement1 = trackInfo1.querySelector('.artist-name1');
+                const albumCoverElement1 = trackInfo1.querySelector('img');
+
+                if (trackNameElement1) trackNameElement1.textContent = track.name;
+                if (artistNameElement1) artistNameElement1.textContent = track.artist;
+                if (albumCoverElement1) {
+                    albumCoverElement1.src = track.imageUrl;
+                    albumCoverElement1.alt = track.name;
+                }
+            } else {
+                console.log('track-info1 not found');
+            }
+
+            const trackInfo2 = document.querySelector('.track-info2');
+            if (trackInfo2) {
+                const trackNameElement2 = trackInfo2.querySelector('.track-name2');
+                const artistNameElement2 = trackInfo2.querySelector('.artist-name2');
+                const albumCoverElement2 = trackInfo2.querySelector('img');
+
+                if (trackNameElement2) trackNameElement2.textContent = track.name;
+                if (artistNameElement2) artistNameElement2.textContent = track.artist;
+                if (albumCoverElement2) {
+                    albumCoverElement2.src = track.imageUrl;
+                    albumCoverElement2.alt = track.name;
+                }
+            } else {
+                console.log('track-info2 not found');
+            }
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Dodanie event listenerów do przycisków
+            document.querySelector('.control-button.previous').addEventListener('click', skipToPrevious);
+            document.querySelector('.control-button.play-pause').addEventListener('click', togglePlayPause);
+            document.querySelector('.control-button.next').addEventListener('click', skipToNext);
+
+            let currentTrackIndex = 0;
+            let currentPlaylist = [];
+
+            let isPlaying = false;
+
+            async function togglePlayPause() {
+                try {
+                    const accessToken = localStorage.getItem('spotifyAccessToken');
+                    const response = await fetch('/api/backend/playback/toggle', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Nie udało się zmienić stanu odtwarzania.');
+                    }
+
+                    // Toggle the isPlaying state
+                    isPlaying = !isPlaying;
+
+                    // Update the button icon based on the new state
+                    updatePlayPauseButton(isPlaying);
+
+                    logMessage('Zmieniono stan odtwarzania.');
+                } catch (error) {
+                    console.error('Błąd zmiany stanu odtwarzania:', error);
+                }
+            }
+
+            function updatePlayPauseButton(isPlaying) {
+                const playPauseButton = document.querySelector('.control-button.play-pause i');
+                if (isPlaying) {
+                    playPauseButton.classList.remove('fa-pause');
+                    playPauseButton.classList.add('fa-play');
+                } else {
+                    playPauseButton.classList.remove('fa-play');
+                    playPauseButton.classList.add('fa-pause');
+                }
+            }
+
+            async function initializePlaybackState() {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    console.error('No access token found.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('https://api.spotify.com/v1/me/player', {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch current playback state');
+                    }
+
+                    const data = await response.json();
+                    isPlaying = data.is_playing;
+                    updatePlayPauseButton(isPlaying);
+
+                } catch (error) {
+                    console.error('Failed to initialize playback state:', error);
+                }
+            }
+
+            // Wywołanie funkcji inicjalizującej po załadowaniu strony
+            initializePlaybackState();
+
+        });
+
+
+        let progressInterval;
+
+        async function updateProgressBar() {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            try {
+                const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch current playback state');
+                }
+
+                const data = await response.json();
+                const progressMs = data.progress_ms;
+                const durationMs = data.item.duration_ms;
+
+                const progressPercent = (progressMs / durationMs) * 100;
+
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = `${progressPercent}%`;
+                }
+
+            } catch (error) {
+                console.error('Failed to update progress bar:', error);
+            }
+        }
+
+        function startProgressBarUpdater() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            progressInterval = setInterval(updateProgressBar, 1000);
+        }
+
+        function stopProgressBarUpdater() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start updating the progress bar when the page is loaded
+            startProgressBarUpdater();
+        });
+
+        async function seek(event) {
+            const accessToken = localStorage.getItem('spotifyAccessToken');
+            if (!accessToken) {
+                console.error('No access token found.');
+                return;
+            }
+
+            try {
+                const progressContainer = document.querySelector('.progress-container');
+                const rect = progressContainer.getBoundingClientRect();
+                const offsetX = event.clientX - rect.left;
+                const containerWidth = rect.width;
+                const seekPercent = offsetX / containerWidth;
+
+                const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch current playback state');
+                }
+
+                const data = await response.json();
+                const durationMs = data.item.duration_ms;
+                const newPositionMs = Math.round(seekPercent * durationMs);
+
+                const seekResponse = await fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${newPositionMs}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!seekResponse.ok) {
+                    throw new Error('Failed to seek to the new position');
+                }
+
+                // Update the progress bar immediately
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = `${seekPercent * 100}%`;
+                }
+
+                // Restart the progress bar updater
+                startProgressBarUpdater();
+
+            } catch (error) {
+                console.error('Failed to seek to the new position:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start updating the progress bar when the page is loaded
+            startProgressBarUpdater();
+        });
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const volumeRange = document.querySelector('.volume-control input[type="range"]');
+
+            volumeRange.addEventListener('input', function () {
+                const value = volumeRange.value;
+                updateVolumeBar(value);
+                setVolume(value);
+            });
+
+            function updateVolumeBar(value) {
+                volumeRange.style.setProperty('--volume-level', `${value}%`);
+            }
+
+            async function setVolume(volume) {
+                const accessToken = localStorage.getItem('spotifyAccessToken');
+                if (!accessToken) {
+                    console.error('No access token found.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/backend/volume', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ volume: parseInt(volume, 10) })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to set volume.');
+                    }
+
+                    console.log('Volume set successfully.');
+                } catch (error) {
+                    console.error('Failed to set volume:', error);
+                }
+            }
+
+            // Initialize volume level
+            updateVolumeBar(volumeRange.value);
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRandomPlaylists();
+        });
+    </script>
+}
