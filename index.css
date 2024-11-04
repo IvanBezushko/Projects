@@ -1,0 +1,347 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.kanban-board {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px;
+  position: absolute;
+  top: -25px;
+  left: 0;
+  margin-left: 13%;
+}
+
+
+
+.todo-container {
+  width: 420px;
+  
+  background-color: #F32828;
+  padding: 20px;
+  border-radius: 15px;
+  margin:20px;
+  color:#121212;
+  
+}
+
+.progress-container{
+  width: 420px;
+  background-color: #E1E451;
+  padding: 20px;
+  border-radius: 15px;
+  margin:20px;
+  color:#121212;
+}
+
+.done-container {
+  width: 420px;
+  background-color: #22A31F;
+  padding: 20px;
+  border-radius: 15px;
+  margin:20px;
+  color:#121212;
+}
+
+h2 {
+  text-align: center;
+}
+
+
+
+.board-list{
+  display: flex;
+  justify-content: space-between;
+  padding: 25px;
+  position: absolute;
+  left: 0;
+  top:80px;
+  margin-left: 13%;
+}
+
+.todo-list-container{
+  width: 420px;
+  height: 600px;
+  background-color: #D9D9D9;
+  padding: 10px;
+  border-radius: 15px;
+  margin:20px;
+  color:#121212;
+  overflow-y: auto; /* Przewijanie pionowe */
+}
+
+.todo-list-container h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.todo-list-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.todo-list-container li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffcdd2; /* Światło-czerwony dla ToDo */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.todo-list-container li:hover {
+  transform: scale(1.02); /* Powiększenie na hover */
+  background-color: #ef9a9a; /* Intensywniejszy czerwony na hover */
+}
+
+.todo-list-container li button {
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.todo-list-container li button:hover {
+  background-color: #e60000; /* Zmiana koloru przycisku na hover */
+}
+
+.todo-list-container li p {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.brak{
+  top: 150px;
+}
+
+.progress-list-container{
+  width: 420px;
+  height: 600px;
+  background-color: #D9D9D9;
+  padding: 10px;
+  border-radius: 15px;
+  margin:20px;
+  color:#121212;
+  overflow-y: auto; /* Przewijanie pionowe */
+}
+
+.progress-list-container h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.progress-list-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.progress-list-container li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff9c4; /* Światło-żółty dla Progress */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.progress-list-container li:hover {
+  transform: scale(1.02); /* Powiększenie na hover */
+  background-color: #fff59d; /* Intensywniejszy żółty na hover */
+}
+
+.progress-list-container li button {
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.progress-list-container li button:hover {
+  background-color: #e60000; /* Zmiana koloru przycisku na hover */
+}
+
+.progress-list-container li p {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.done-list-container {
+  width: 420px;
+  height: 600px;
+  background-color: #D9D9D9;
+  padding: 10px;
+  border-radius: 15px;
+  margin:20px;
+  color:#121212;
+  overflow-y: auto; /* Przewijanie pionowe */
+}
+
+.done-list-container h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.done-list-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.done-list-container li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #c8e6c9; /* Światło-zielony dla Done */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.done-list-container li:hover {
+  transform: scale(1.02); /* Powiększenie na hover */
+  background-color: #a5d6a7; /* Intensywniejszy zielony na hover */
+}
+
+.done-list-container li button {
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.done-list-container li button:hover {
+  background-color: #e60000; /* Zmiana koloru przycisku na hover */
+}
+
+.done-list-container li p {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+
+/* Styl dla suwaka ToDo */
+.todo-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.todo-list-container::-webkit-scrollbar-track {
+  background: #ffe0e0; /* Jasny czerwony dla tła suwaka ToDo */
+  border-radius: 10px;
+}
+
+.todo-list-container::-webkit-scrollbar-thumb {
+  background-color: #ff9999; /* Czerwony thumb dla ToDo */
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.todo-list-container::-webkit-scrollbar-thumb:hover {
+  background-color: #ff6666; /* Ciemniejszy czerwony na hover */
+}
+
+/* Styl dla suwaka Progress */
+.progress-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.progress-list-container::-webkit-scrollbar-track {
+  background: #fffbd5; /* Jasny żółty dla tła suwaka Progress */
+  border-radius: 10px;
+}
+
+.progress-list-container::-webkit-scrollbar-thumb {
+  background-color: #ffeb3b; /* Żółty thumb dla Progress */
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.progress-list-container::-webkit-scrollbar-thumb:hover {
+  background-color: #fdd835; /* Ciemniejszy żółty na hover */
+}
+
+/* Styl dla suwaka Done */
+.done-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.done-list-container::-webkit-scrollbar-track {
+  background: #e0f7e9; /* Jasny zielony dla tła suwaka Done */
+  border-radius: 10px;
+}
+
+.done-list-container::-webkit-scrollbar-thumb {
+  background-color: #66bb6a; /* Zielony thumb dla Done */
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.done-list-container::-webkit-scrollbar-thumb:hover {
+  background-color: #43a047; /* Ciemniejszy zielony na hover */
+}
+
+/* Dla Firefox i innych przeglądarek */
+.todo-list-container {
+  scrollbar-width: thin;
+  scrollbar-color: #ff9999 #ffe0e0; /* Kolory dla ToDo w Firefox */
+}
+
+.progress-list-container {
+  scrollbar-width: thin;
+  scrollbar-color: #ffeb3b #fffbd5; /* Kolory dla Progress w Firefox */
+}
+
+.done-list-container {
+  scrollbar-width: thin;
+  scrollbar-color: #66bb6a #e0f7e9; /* Kolory dla Done w Firefox */
+}
